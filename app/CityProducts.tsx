@@ -116,7 +116,7 @@ const CityProducts: React.FC<CityProductsProps> = ({ products }) => {
                                 key={p.id}
                                 actions={[
                                     <Typography.Link key="buy">
-                                        Buy Now
+                                        View
                                     </Typography.Link>,
                                 ]}
                             >
