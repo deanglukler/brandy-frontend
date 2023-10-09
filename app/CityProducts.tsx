@@ -2,9 +2,8 @@
 
 import React, { useState } from "react";
 import { Product } from "./types";
-import { Avatar, Card, Collapse, Input } from "antd";
+import { Avatar, Card, Input, Typography } from "antd";
 import _ from "lodash";
-import Image from "next/image";
 import { SearchOutlined } from "@ant-design/icons";
 
 interface CityProductsProps {
@@ -82,6 +81,18 @@ const CityProducts: React.FC<CityProductsProps> = ({ products }) => {
         };
     });
 
+    const searchResults = searchFilter(productsByCity[activeTab]);
+
+    let activeTabKey = activeTab;
+    if (searchResults.length === 0) {
+        _.keys(productsByCity).forEach((city) => {
+            if (searchFilter(productsByCity[city]).length > 0) {
+                activeTabKey = city;
+                setActiveTab(city);
+            }
+        });
+    }
+
     return (
         <>
             <div className="mb-4">
@@ -93,12 +104,23 @@ const CityProducts: React.FC<CityProductsProps> = ({ products }) => {
                     onChange={(e) => setSearch(e.target.value)}
                 />
             </div>
-            <Card onTabChange={onTabChange} tabList={tabList}>
+            <Card
+                onTabChange={onTabChange}
+                tabList={tabList}
+                activeTabKey={activeTabKey}
+            >
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    {searchFilter(productsByCity[activeTab]).map((p) => {
+                    {searchResults.map((p) => {
                         return (
-                            <Card key={p.id}>
-                                <div className="flex">
+                            <Card
+                                key={p.id}
+                                actions={[
+                                    <Typography.Link key="buy">
+                                        Buy Now
+                                    </Typography.Link>,
+                                ]}
+                            >
+                                <div className="flex min-h-[130px]">
                                     <Avatar
                                         style={{ width: 100, height: 100 }}
                                         icon={
